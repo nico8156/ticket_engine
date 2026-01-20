@@ -1,16 +1,24 @@
-normalize_ocr drops CR, trims and collapses spaces 3 0.00227908
-parse_total extracts TOTAL with comma decimals 19 0.000389136
-parse_total extracts NET A PAYER 19 0.000366869
-parse_total extracts amount with thousands separator 7 0.00105617
-parse_total extracts amount when euro symbol is before the number 5 0.00156162
-parse_total accepts one-decimal OCR amounts and normalizes to two decimals 3 0.00259983
-parse_total accepts integer amounts without decimals 2 0.00353107
-parse_merchant picks the first plausible header line 6 0.00124477
-parse_merchant skips generic lines like MERCI / TICKET / TOTAL 6 0.00119048
-parse_merchant prefers the most letter-heavy line in the header block 5 0.00146974
-parse_merchant ignores postal codes and addresses when a plausible name exists 4 0.00183065
-parse_merchant does not pick city-only line over the merchant name 1 0.00700786
-parse_merchant ignores generic greetings 1 0.0079143
-engine returns ok when total and merchant are found 1 0.00703868
-signals detects SIRET 1 0.00737172
+normalize_ocr drops CR, trims and collapses spaces 4 0.0018078
+parse_total extracts TOTAL with comma decimals 23 0.000303632
+parse_total extracts NET A PAYER 23 0.000289502
+parse_total extracts amount with thousands separator 11 0.000632744
+parse_total extracts amount when euro symbol is before the number 9 0.000809015
+parse_total accepts one-decimal OCR amounts and normalizes to two decimals 7 0.00108275
+parse_total accepts integer amounts without decimals 6 0.00125695
+parse_merchant picks the first plausible header line 12 0.000557148
+parse_merchant skips generic lines like MERCI / TICKET / TOTAL 12 0.000556804
+parse_merchant prefers the most letter-heavy line in the header block 11 0.000676402
+parse_merchant ignores postal codes and addresses when a plausible name exists 10 0.00072195
+parse_merchant does not pick city-only line over the merchant name 4 0.00170686
+parse_merchant ignores generic greetings 7 0.00115863
+engine returns ok when total and merchant are found 2 0.00360266
+signals detects SIRET 6 0.00112794
+[real_receipt] engine parses a real cafe receipt OCR 0 0
+parse_total prefers TOTAL TTC over TOTAL HT when both exist 4 0.00197646
+parse_total supports TOTAL TTC amount on the next line 3 0.00244535
+parse_merchant can merge consecutive header lines into a single merchant name 1 0.00678655
+[engine_real_receipt][real_receipt] engine parses a real cafe receipt OCR 3 0.00520957
+detect_signals finds card payment keywords 3 0.00261076
+detect_signals finds TVA 1 0.0069619
+detect_signals finds SIRET 2 0.00372483
 ---

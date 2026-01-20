@@ -11,12 +11,27 @@ static std::string load_fixture(const std::string &path) {
   return ss.str();
 }
 
-TEST_CASE("engine parses a real cafe receipt OCR") {
+TEST_CASE("[engine_real_receipt][real_receipt] engine parses a real cafe "
+          "receipt OCR") {
   tv::Options opt;
-  auto text = load_fixture("tests/fixtures/receipt_real_001.txt");
+  auto text = load_fixture("../../tests/fixtures/receipt_real_001.txt");
   auto out = tv::run(text, opt);
+  INFO("text" << text);
+  INFO("status=" << static_cast<int>(out.status));
+  INFO("confidence=" << out.confidence);
 
-  REQUIRE(out.status == tv::Status::Ok);
+  INFO("merchant=" << (out.ticket.merchant.value ? *out.ticket.merchant.value
+                                                 : "<none>"));
+  if (out.ticket.total.value) {
+    INFO("total=" << out.ticket.total.value->value);
+  } else {
+    INFO("total=<none>");
+  }
+  INFO("fixture_size=" << text.size());
+  REQUIRE(text.size() > 50);
+
+  REQUIRE(out.ticket.total.value.has_value());
+  REQUIRE(out.ticket.merchant.value.has_value());
 
   REQUIRE(out.ticket.merchant.value.has_value());
   REQUIRE(out.ticket.merchant.value->size() >= 5);

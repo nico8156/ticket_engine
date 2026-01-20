@@ -53,3 +53,22 @@ TEST_CASE("parse_total accepts integer amounts without decimals") {
   REQUIRE(t.total.value.has_value());
   REQUIRE(t.total.value->value == Catch::Approx(4.0));
 }
+TEST_CASE("parse_total prefers TOTAL TTC over TOTAL HT when both exist") {
+  tv::ParsedTicket t;
+  tv::parse_total("Total HT 28,83 €\n"
+                  "TVA 10.0% 2,87 €\n"
+                  "Total TTC 31,70 €\n",
+                  t);
+
+  REQUIRE(t.total.value.has_value());
+  REQUIRE(t.total.value->value == Catch::Approx(31.70));
+}
+TEST_CASE("parse_total supports TOTAL TTC amount on the next line") {
+  tv::ParsedTicket t;
+  tv::parse_total("Total TTC\n"
+                  "31,70€\n",
+                  t);
+
+  REQUIRE(t.total.value.has_value());
+  REQUIRE(t.total.value->value == Catch::Approx(31.70));
+}

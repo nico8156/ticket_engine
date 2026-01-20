@@ -65,3 +65,16 @@ TEST_CASE("parse_merchant ignores generic greetings") {
   REQUIRE(t.merchant.value.has_value());
   REQUIRE(*t.merchant.value == "CAFE DE LA PLACE");
 }
+TEST_CASE("parse_merchant can merge consecutive header lines into a single "
+          "merchant name") {
+  tv::ParsedTicket t;
+  tv::parse_merchant("CAFÉ\n"
+                     "DE QUARTIER\n"
+                     "GANG café de quartier\n"
+                     "8 Rue de la Parcheminerie\n"
+                     "TOTAL 31,70 €\n",
+                     t);
+
+  REQUIRE(t.merchant.value.has_value());
+  REQUIRE(*t.merchant.value == "CAFÉ DE QUARTIER");
+}
