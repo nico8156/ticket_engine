@@ -19,6 +19,8 @@ add_library(ticketverify_core
   src/version.cpp     # optionnel
   src/normalize.cpp
   src/parse_total.cpp
+  src/parse_merchant.cpp
+  src/signals.cpp
 )
 
 target_include_directories(ticketverify_core PUBLIC include)
@@ -29,4 +31,9 @@ add_executable(ticketverify
 )
 
 target_link_libraries(ticketverify PRIVATE ticketverify_core)
+
+# ---- Tests ----
+include(CTest)
+enable_testing()
+add_subdirectory(tests)
 

@@ -45,6 +45,11 @@ run "a_payer_spaces" \
 run "reject_no_total" \
 "CAFE DE LA PLACE\nESPRESSO 2,20\n" \
 "\"status\":\"reject\""
+# 6) status changed
+run "cli_ok_with_total_and_merchant" \
+"CAFE DE LA PLACE\nTOTAL 4,00 €\n" \
+"\"status\":\"ok\""
+
 
 # 6) Empty input => exit 3
 echo "=== empty_input_exit_code ==="

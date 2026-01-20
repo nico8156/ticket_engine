@@ -1,4 +1,16 @@
 normalize_ocr drops CR, trims and collapses spaces 3 0.00227908
-parse_total extracts TOTAL with comma decimals 6 0.00110493
-parse_total extracts NET A PAYER 6 0.00115118
+parse_total extracts TOTAL with comma decimals 19 0.000389136
+parse_total extracts NET A PAYER 19 0.000366869
+parse_total extracts amount with thousands separator 7 0.00105617
+parse_total extracts amount when euro symbol is before the number 5 0.00156162
+parse_total accepts one-decimal OCR amounts and normalizes to two decimals 3 0.00259983
+parse_total accepts integer amounts without decimals 2 0.00353107
+parse_merchant picks the first plausible header line 6 0.00124477
+parse_merchant skips generic lines like MERCI / TICKET / TOTAL 6 0.00119048
+parse_merchant prefers the most letter-heavy line in the header block 5 0.00146974
+parse_merchant ignores postal codes and addresses when a plausible name exists 4 0.00183065
+parse_merchant does not pick city-only line over the merchant name 1 0.00700786
+parse_merchant ignores generic greetings 1 0.0079143
+engine returns ok when total and merchant are found 1 0.00703868
+signals detects SIRET 1 0.00737172
 ---

@@ -10,6 +10,10 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(tv_tests
   test_normalize.cpp
   test_parse_total.cpp
+  test_parse_merchant.cpp
+  test_engine.cpp
+  test_engine_real_receipt.cpp
+  test_signals.cpp
 )
 
 target_include_directories(tv_tests PRIVATE ../include)
