@@ -1,0 +1,20 @@
+include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG v3.5.4
+)
+FetchContent_MakeAvailable(Catch2)
+
+add_executable(tv_tests
+  test_normalize.cpp
+  test_parse_total.cpp
+)
+
+target_include_directories(tv_tests PRIVATE ../include)
+target_link_libraries(tv_tests PRIVATE Catch2::Catch2WithMain ticketverify_core)
+
+include(Catch)
+catch_discover_tests(tv_tests)
+

@@ -1,0 +1,23 @@
+Start testing: Jan 20 11:45 CET
+----------------------------------------------------------
+1/3 Testing: normalize_ocr drops CR, trims and collapses spaces
+1/3 Test: normalize_ocr drops CR, trims and collapses spaces
+Command: "/Users/nicolasmaldiney/ticketverify-engine/build/tests/tv_tests" "normalize_ocr drops CR\, trims and collapses spaces"
+Directory: /Users/nicolasmaldiney/ticketverify-engine/build/tests
+"normalize_ocr drops CR, trims and collapses spaces" start time: Jan 20 11:45 CET
+Output:
+----------------------------------------------------------
+Filters: "normalize_ocr drops CR\, trims and collapses spaces"
+Randomness seeded to: 4178034975
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"normalize_ocr drops CR, trims and collapses spaces" end time: Jan 20 11:45 CET
+"normalize_ocr drops CR, trims and collapses spaces" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Jan 20 11:45 CET

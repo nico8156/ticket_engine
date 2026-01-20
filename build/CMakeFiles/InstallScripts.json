@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/nicolasmaldiney/ticketverify-engine/build/cmake_install.cmake",
+		"/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

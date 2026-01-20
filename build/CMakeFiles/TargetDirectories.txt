@@ -1,0 +1,6 @@
+/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify_core.dir
+/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify.dir
+/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/edit_cache.dir
+/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/rebuild_cache.dir
+/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-build/CMakeFiles/edit_cache.dir
+/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-build/CMakeFiles/rebuild_cache.dir

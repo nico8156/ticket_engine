@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/Users/nicolasmaldiney/ticketverify-engine/build",
+  "command": "/usr/bin/c++ -I/Users/nicolasmaldiney/ticketverify-engine/include -I/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-src/include -std=gnu++20 -o CMakeFiles/ticketverify_core.dir/src/cli.cpp.o -c /Users/nicolasmaldiney/ticketverify-engine/src/cli.cpp",
+  "file": "/Users/nicolasmaldiney/ticketverify-engine/src/cli.cpp",
+  "output": "/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify_core.dir/src/cli.cpp.o"
+},
+{
+  "directory": "/Users/nicolasmaldiney/ticketverify-engine/build",
+  "command": "/usr/bin/c++ -I/Users/nicolasmaldiney/ticketverify-engine/include -I/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-src/include -std=gnu++20 -o CMakeFiles/ticketverify_core.dir/src/engine.cpp.o -c /Users/nicolasmaldiney/ticketverify-engine/src/engine.cpp",
+  "file": "/Users/nicolasmaldiney/ticketverify-engine/src/engine.cpp",
+  "output": "/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify_core.dir/src/engine.cpp.o"
+},
+{
+  "directory": "/Users/nicolasmaldiney/ticketverify-engine/build",
+  "command": "/usr/bin/c++ -I/Users/nicolasmaldiney/ticketverify-engine/include -I/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-src/include -std=gnu++20 -o CMakeFiles/ticketverify_core.dir/src/json.cpp.o -c /Users/nicolasmaldiney/ticketverify-engine/src/json.cpp",
+  "file": "/Users/nicolasmaldiney/ticketverify-engine/src/json.cpp",
+  "output": "/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify_core.dir/src/json.cpp.o"
+},
+{
+  "directory": "/Users/nicolasmaldiney/ticketverify-engine/build",
+  "command": "/usr/bin/c++ -I/Users/nicolasmaldiney/ticketverify-engine/include -I/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-src/include -std=gnu++20 -o CMakeFiles/ticketverify_core.dir/src/version.cpp.o -c /Users/nicolasmaldiney/ticketverify-engine/src/version.cpp",
+  "file": "/Users/nicolasmaldiney/ticketverify-engine/src/version.cpp",
+  "output": "/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify_core.dir/src/version.cpp.o"
+},
+{
+  "directory": "/Users/nicolasmaldiney/ticketverify-engine/build",
+  "command": "/usr/bin/c++ -I/Users/nicolasmaldiney/ticketverify-engine/include -I/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-src/include -std=gnu++20 -o CMakeFiles/ticketverify_core.dir/src/normalize.cpp.o -c /Users/nicolasmaldiney/ticketverify-engine/src/normalize.cpp",
+  "file": "/Users/nicolasmaldiney/ticketverify-engine/src/normalize.cpp",
+  "output": "/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify_core.dir/src/normalize.cpp.o"
+},
+{
+  "directory": "/Users/nicolasmaldiney/ticketverify-engine/build",
+  "command": "/usr/bin/c++ -I/Users/nicolasmaldiney/ticketverify-engine/include -I/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-src/include -std=gnu++20 -o CMakeFiles/ticketverify_core.dir/src/parse_total.cpp.o -c /Users/nicolasmaldiney/ticketverify-engine/src/parse_total.cpp",
+  "file": "/Users/nicolasmaldiney/ticketverify-engine/src/parse_total.cpp",
+  "output": "/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify_core.dir/src/parse_total.cpp.o"
+},
+{
+  "directory": "/Users/nicolasmaldiney/ticketverify-engine/build",
+  "command": "/usr/bin/c++ -I/Users/nicolasmaldiney/ticketverify-engine/include -I/Users/nicolasmaldiney/ticketverify-engine/build/_deps/nlohmann_json-src/include -std=gnu++20 -o CMakeFiles/ticketverify.dir/src/main.cpp.o -c /Users/nicolasmaldiney/ticketverify-engine/src/main.cpp",
+  "file": "/Users/nicolasmaldiney/ticketverify-engine/src/main.cpp",
+  "output": "/Users/nicolasmaldiney/ticketverify-engine/build/CMakeFiles/ticketverify.dir/src/main.cpp.o"
+}
+]

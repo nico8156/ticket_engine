@@ -1,0 +1,4 @@
+normalize_ocr drops CR, trims and collapses spaces 3 0.00227908
+parse_total extracts TOTAL with comma decimals 6 0.00110493
+parse_total extracts NET A PAYER 6 0.00115118
+---

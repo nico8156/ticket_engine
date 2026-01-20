@@ -1,0 +1,7 @@
+add_test( [==[normalize_ocr drops CR, trims and collapses spaces]==] /Users/nicolasmaldiney/ticketverify-engine/build/tests/tv_tests [==[normalize_ocr drops CR\, trims and collapses spaces]==]  )
+set_tests_properties( [==[normalize_ocr drops CR, trims and collapses spaces]==] PROPERTIES WORKING_DIRECTORY /Users/nicolasmaldiney/ticketverify-engine/build/tests)
+add_test( [==[parse_total extracts TOTAL with comma decimals]==] /Users/nicolasmaldiney/ticketverify-engine/build/tests/tv_tests [==[parse_total extracts TOTAL with comma decimals]==]  )
+set_tests_properties( [==[parse_total extracts TOTAL with comma decimals]==] PROPERTIES WORKING_DIRECTORY /Users/nicolasmaldiney/ticketverify-engine/build/tests)
+add_test( [==[parse_total extracts NET A PAYER]==] /Users/nicolasmaldiney/ticketverify-engine/build/tests/tv_tests [==[parse_total extracts NET A PAYER]==]  )
+set_tests_properties( [==[parse_total extracts NET A PAYER]==] PROPERTIES WORKING_DIRECTORY /Users/nicolasmaldiney/ticketverify-engine/build/tests)
+set( tv_tests_TESTS [==[normalize_ocr drops CR, trims and collapses spaces]==] [==[parse_total extracts TOTAL with comma decimals]==] [==[parse_total extracts NET A PAYER]==])
