@@ -1,3 +1,0 @@
-/Users/nicolasmaldiney/ticketverify-engine/build/_deps/catch2-subbuild/CMakeFiles/catch2-populate.dir
-/Users/nicolasmaldiney/ticketverify-engine/build/_deps/catch2-subbuild/CMakeFiles/edit_cache.dir
-/Users/nicolasmaldiney/ticketverify-engine/build/_deps/catch2-subbuild/CMakeFiles/rebuild_cache.dir

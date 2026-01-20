@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/nicolasmaldiney/ticketverify-engine/build/_deps/catch2-subbuild/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
