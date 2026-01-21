@@ -7,89 +7,161 @@
 #include <string>
 #include <vector>
 
-static std::vector<std::string> collect_args(int argc, char** argv) {
-  std::vector<std::string> a;
-  a.reserve((argc > 1) ? (argc - 1) : 0);
-  for (int i = 1; i < argc; i++) a.emplace_back(argv[i]);
-  return a;
-}
-
-static std::string read_all_stdin_limited_lines(std::uint32_t max_lines, bool* truncated) {
-  *truncated = false;
-
-  std::string input(
-    (std::istreambuf_iterator<char>(std::cin)),
-    std::istreambuf_iterator<char>()
-  );
-
-  // Enforce max_lines by truncating after N lines
-  std::uint32_t lines = 0;
-  std::size_t cut_pos = input.size();
-  for (std::size_t i = 0; i < input.size(); i++) {
-    if (input[i] == '\n') {
-      lines++;
-      if (lines >= max_lines) { cut_pos = i + 1; break; }
+static std::string json_escape(const std::string &s) {
+  std::string out;
+  out.reserve(s.size() + 8);
+  for (unsigned char c : s) {
+    switch (c) {
+    case '\\':
+      out += "\\\\";
+      break;
+    case '"':
+      out += "\\\"";
+      break;
+    case '\n':
+      out += "\\n";
+      break;
+    case '\r':
+      out += "\\r";
+      break;
+    case '\t':
+      out += "\\t";
+      break;
+    default:
+      if (c < 0x20) {
+        out += ' ';
+      } // MVP: neutralise contrôles
+      else
+        out += static_cast<char>(c);
     }
   }
-  if (cut_pos < input.size()) {
-    input.resize(cut_pos);
-    *truncated = true;
+  return out;
+}
+
+static void print_json_error(const std::string &code,
+                             const std::string &message) {
+  std::cout << "{\"ok\":false,\"error\":{\"code\":\"" << json_escape(code)
+            << "\",\"message\":\"" << json_escape(message) << "\"}}";
+}
+
+static std::vector<std::string> collect_args(int argc, char **argv) {
+  std::vector<std::string> a;
+  a.reserve((argc > 1) ? (argc - 1) : 0);
+  for (int i = 1; i < argc; i++)
+    a.emplace_back(argv[i]);
+  return a;
+}
+static std::string read_stdin_limited(std::uint32_t max_lines,
+                                      std::size_t max_bytes,
+                                      bool *truncated_lines, bool *too_large) {
+  *truncated_lines = false;
+  *too_large = false;
+
+  std::string input;
+  input.reserve(4096);
+
+  std::uint32_t lines = 0;
+  char buf[4096];
+
+  while (std::cin.good()) {
+    std::cin.read(buf, sizeof(buf));
+    std::streamsize got = std::cin.gcount();
+    if (got <= 0)
+      break;
+
+    for (std::streamsize i = 0; i < got; i++) {
+      if (input.size() >= max_bytes) {
+        *too_large = true;
+        return input;
+      }
+      char c = buf[i];
+      input.push_back(c);
+
+      if (c == '\n') {
+        lines++;
+        if (lines >= max_lines) {
+          *truncated_lines = true;
+          return input;
+        }
+      }
+    }
   }
   return input;
 }
-
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   auto args = collect_args(argc, argv);
   auto parsed = tv::parse_args(args);
 
   if (parsed.show_help) {
-    std::cout << tv::help_text();
+    std::cerr << tv::help_text() << "\n";
     return 0;
   }
   if (parsed.show_version) {
-    std::cout << tv::version_text() << "\n";
+    std::cerr << tv::version_text() << "\n";
     return 0;
   }
   if (parsed.error) {
-    std::cerr << "Error: " << *parsed.error << "\n\n" << tv::help_text();
+    if (parsed.options.debug) {
+      std::cerr << "[debug] arg error: " << *parsed.error << "\n";
+    }
+    print_json_error("ARGS_INVALID", *parsed.error);
     return 2;
   }
 
   bool truncated = false;
-  std::string ocr_text = read_all_stdin_limited_lines(parsed.options.max_lines, &truncated);
+  bool too_large = false;
+  constexpr std::size_t MAX_BYTES = 2 * 1024 * 1024; // 2MB MVP
 
-  // Empty input => exit 3 (contract)
-  bool any_non_ws = false;
-  for (char c : ocr_text) {
-    if (!std::isspace(static_cast<unsigned char>(c))) { any_non_ws = true; break; }
+  std::string ocr_text = read_stdin_limited(parsed.options.max_lines, MAX_BYTES,
+                                            &truncated, &too_large);
+
+  auto is_all_ws = [](const std::string &s) {
+    for (unsigned char c : s)
+      if (!std::isspace(c))
+        return false;
+    return true;
+  };
+
+  if (too_large) {
+    if (parsed.options.debug)
+      std::cerr << "[debug] input too large (max_bytes=" << MAX_BYTES << ")\n";
+    print_json_error("INPUT_TOO_LARGE", "stdin exceeds max size");
+    return 2;
   }
-  if (!any_non_ws) {
-    std::cerr << "Error: empty/whitespace input\n";
-    return 3;
+
+  if (ocr_text.empty() || is_all_ws(ocr_text)) {
+    if (parsed.options.debug)
+      std::cerr << "[debug] empty/whitespace input\n";
+    print_json_error("INPUT_EMPTY", "stdin is empty");
+    return 2;
   }
 
   if (parsed.options.debug && truncated) {
-    std::cerr << "[debug] input truncated to max_lines=" << parsed.options.max_lines << "\n";
+    std::cerr << "[debug] input truncated to max_lines="
+              << parsed.options.max_lines << "\n";
   }
-
   try {
     auto out = tv::run(ocr_text, parsed.options);
-    std::cout << tv::to_json_v1(out) << "\n";
 
-    // Exit code mapping
-    switch (out.status) {
-      case tv::Status::Ok: return 0;
-      case tv::Status::Partial: return 0; // MVP: still success, caller checks status/confidence
-      case tv::Status::Reject: return 0;  // same: JSON is still valid
-      case tv::Status::Error: return 5;
+    if (out.status == tv::Status::Error) {
+      if (parsed.options.debug)
+        std::cerr << "[debug] engine returned Status::Error\n";
+      print_json_error("INTERNAL", "engine error");
+      return 3;
     }
-    return 5;
-  } catch (const std::exception& e) {
-    std::cerr << "Internal error: " << e.what() << "\n";
-    return 5;
+
+    std::cout << tv::to_json_v1(out) << "\n";
+    return 0;
+
+  } catch (const std::exception &e) {
+    if (parsed.options.debug)
+      std::cerr << "[debug] exception: " << e.what() << "\n";
+    print_json_error("INTERNAL", "unexpected error");
+    return 3;
   } catch (...) {
-    std::cerr << "Internal error: unknown exception\n";
-    return 5;
+    if (parsed.options.debug)
+      std::cerr << "[debug] unknown exception\n";
+    print_json_error("INTERNAL", "unexpected error");
+    return 3;
   }
 }
-
