@@ -13,10 +13,9 @@ struct CliParseResult {
   std::optional<std::string> error; // if present => usage error
 };
 
-CliParseResult parse_args(const std::vector<std::string>& args);
+CliParseResult parse_args(const std::vector<std::string> &args);
 
 std::string help_text();
 std::string version_text();
 
 } // namespace tv
-
