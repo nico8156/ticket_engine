@@ -2,11 +2,79 @@
 #include "tv/engine.hpp"
 #include "tv/json.hpp"
 
+#include <cctype>
 #include <iostream>
 #include <iterator>
 #include <string>
 #include <vector>
 
+// ---- Small helper: make a string "safe-ish" for JSON detail fields ----
+// If bytes are not valid UTF-8, we replace them with '?'.
+// This avoids nlohmann/json throwing if we ever decide to put detail into json.
+static std::string sanitize_utf8_lossy(const std::string &s) {
+  std::string out;
+  out.reserve(s.size());
+
+  const unsigned char *p = reinterpret_cast<const unsigned char *>(s.data());
+  const size_t n = s.size();
+
+  size_t i = 0;
+  while (i < n) {
+    unsigned char c = p[i];
+
+    // ASCII
+    if (c < 0x80) {
+      out.push_back(static_cast<char>(c));
+      i++;
+      continue;
+    }
+
+    // 2-byte
+    if ((c & 0xE0) == 0xC0) {
+      if (i + 1 < n && (p[i + 1] & 0xC0) == 0x80) {
+        out.append(reinterpret_cast<const char *>(p + i), 2);
+        i += 2;
+      } else {
+        out.push_back('?');
+        i++;
+      }
+      continue;
+    }
+
+    // 3-byte
+    if ((c & 0xF0) == 0xE0) {
+      if (i + 2 < n && (p[i + 1] & 0xC0) == 0x80 && (p[i + 2] & 0xC0) == 0x80) {
+        out.append(reinterpret_cast<const char *>(p + i), 3);
+        i += 3;
+      } else {
+        out.push_back('?');
+        i++;
+      }
+      continue;
+    }
+
+    // 4-byte
+    if ((c & 0xF8) == 0xF0) {
+      if (i + 3 < n && (p[i + 1] & 0xC0) == 0x80 && (p[i + 2] & 0xC0) == 0x80 &&
+          (p[i + 3] & 0xC0) == 0x80) {
+        out.append(reinterpret_cast<const char *>(p + i), 4);
+        i += 4;
+      } else {
+        out.push_back('?');
+        i++;
+      }
+      continue;
+    }
+
+    // invalid leading byte
+    out.push_back('?');
+    i++;
+  }
+
+  return out;
+}
+
+// Minimal JSON escape for our handcrafted error JSON.
 static std::string json_escape(const std::string &s) {
   std::string out;
   out.reserve(s.size() + 8);
@@ -30,18 +98,24 @@ static std::string json_escape(const std::string &s) {
     default:
       if (c < 0x20) {
         out += ' ';
-      } // MVP: neutralise contrôles
-      else
+      } else {
         out += static_cast<char>(c);
+      }
     }
   }
   return out;
 }
 
 static void print_json_error(const std::string &code,
-                             const std::string &message) {
+                             const std::string &message,
+                             const std::string *detail = nullptr) {
   std::cout << "{\"ok\":false,\"error\":{\"code\":\"" << json_escape(code)
-            << "\",\"message\":\"" << json_escape(message) << "\"}}";
+            << "\",\"message\":\"" << json_escape(message) << "\"";
+  if (detail && !detail->empty()) {
+    std::string d = sanitize_utf8_lossy(*detail);
+    std::cout << ",\"detail\":\"" << json_escape(d) << "\"";
+  }
+  std::cout << "}}";
 }
 
 static std::vector<std::string> collect_args(int argc, char **argv) {
@@ -51,6 +125,7 @@ static std::vector<std::string> collect_args(int argc, char **argv) {
     a.emplace_back(argv[i]);
   return a;
 }
+
 static std::string read_stdin_limited(std::uint32_t max_lines,
                                       std::size_t max_bytes,
                                       bool *truncated_lines, bool *too_large) {
@@ -88,6 +163,7 @@ static std::string read_stdin_limited(std::uint32_t max_lines,
   }
   return input;
 }
+
 int main(int argc, char **argv) {
   auto args = collect_args(argc, argv);
   auto parsed = tv::parse_args(args);
@@ -140,6 +216,7 @@ int main(int argc, char **argv) {
     std::cerr << "[debug] input truncated to max_lines="
               << parsed.options.max_lines << "\n";
   }
+
   try {
     auto out = tv::run(ocr_text, parsed.options);
 
@@ -154,14 +231,25 @@ int main(int argc, char **argv) {
     return 0;
 
   } catch (const std::exception &e) {
-    if (parsed.options.debug)
+    if (parsed.options.debug) {
       std::cerr << "[debug] exception: " << e.what() << "\n";
-    print_json_error("INTERNAL", "unexpected error");
+      std::cerr << "[ticketverify] exception: " << e.what() << "\n";
+    }
+    // IMPORTANT: print only ONE JSON on stdout
+    std::string detail = e.what();
+    print_json_error("INTERNAL", "unexpected error", &detail);
+    std::cout << "\n";
     return 3;
+
   } catch (...) {
-    if (parsed.options.debug)
+    if (parsed.options.debug) {
       std::cerr << "[debug] unknown exception\n";
-    print_json_error("INTERNAL", "unexpected error");
+      std::cerr << "[ticketverify] unknown exception\n";
+    }
+    // IMPORTANT: print only ONE JSON on stdout
+    std::string detail = "unknown";
+    print_json_error("INTERNAL", "unexpected error", &detail);
+    std::cout << "\n";
     return 3;
   }
 }

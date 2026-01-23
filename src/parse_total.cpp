@@ -32,15 +32,13 @@ static std::optional<double> parse_amount(const std::string &s) {
 }
 
 void parse_total(std::string_view text, ParsedTicket &ticket) {
-  // MVP: match common FR variants
-  // TOTAL TTC / TOTAL / NET A PAYER / A PAYER, then an amount like 12,34
-  // or 12.34
-
   static const std::regex re(
       R"((TOTAL(\s+TTC)?|NET\s+A\s+PAYER|A\s+PAYER)\s*[:\-]?\s*(?:€|EUR)?\s*([0-9]{1,3}(?:[ .][0-9]{3})*(?:[.,][0-9]{1,2})?))",
       std::regex::icase);
 
-  std::cmatch m;
+  using It = std::string_view::const_iterator;
+  std::match_results<It> m;
+
   if (std::regex_search(text.begin(), text.end(), m, re)) {
     std::string amount_str = m[3].str();
     auto amount = parse_amount(amount_str);
